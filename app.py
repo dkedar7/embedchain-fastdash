@@ -2,7 +2,7 @@ import os
 from fast_dash import fastdash, FastDash, Fastify, dcc
 import dash_mantine_components as dmc
 from embedchain import App
-from embedchain.config import QueryConfig, AddConfig
+from embedchain.config import QueryConfig
 from string import Template
 
 # Define app configurations
