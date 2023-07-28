@@ -1,6 +1,6 @@
 import os
-from fast_dash import fastdash, FastDash, Fastify, dcc
-import dash_mantine_components as dmc
+from fast_dash import FastDash, Fastify, dcc, dmc
+
 from embedchain import App
 from embedchain.config import QueryConfig
 from string import Template
@@ -18,20 +18,21 @@ Query: $query
 
 Answer:"""
 )
-query_config = QueryConfig(template=PROMPT)
+query_config = QueryConfig(template=PROMPT, number_documents=5, max_tokens=2000, model="gpt-4")
 
 # Define components
 openai_api_key_component = Fastify(
     dmc.PasswordInput(
         placeholder="API Key",
         description="Get yours at https://platform.openai.com/account/api-keys",
+        required=True
     ),
     "value",
 )
 
 web_page_urls_component = Fastify(
     dmc.MultiSelect(
-        description="Include all the reference Web URLs",
+        description="Include all the reference web URLs",
         placeholder="Enter URLs separated by commas",
         searchable=True,
         creatable=True,
@@ -40,13 +41,16 @@ web_page_urls_component = Fastify(
 )
 
 text_component = Fastify(
-    dmc.Textarea(placeholder="Write your query here", autosize=True, minRows=4), "value"
+    dmc.Textarea(placeholder="Write your query here", autosize=True, minRows=4, description="Any additional information that could be useful"), "value"
 )
 
-answer_component = Fastify(dcc.Markdown(style={"text-align": "left", "padding": "1%"}), "children")
+query_component = Fastify(
+    dmc.Textarea(placeholder="Write your query here", autosize=True, minRows=4, required=True, description="Write your query here"), "value",
+)
+
+answer_component = Fastify(dcc.Markdown(style={"text-align": "left", "padding": "1%"}, link_target="_blank"), "children")
 
 
-# Define the callback function
 def explore_your_knowledge_base(
     openai_api_key: openai_api_key_component,
     web_page_urls: web_page_urls_component,
@@ -61,26 +65,37 @@ def explore_your_knowledge_base(
     Embedchain itself uses Langchain and OpenAI's ChatGPT API.
     """
     os.environ["OPENAI_API_KEY"] = openai_api_key
-    app = App()
 
-    if web_page_urls:
-        [app.add("web_page", url["value"]) for url in web_page_urls]
+    try:
+        app = App()
 
-    if youtube_urls:
-        [app.add("youtube_video", url["value"]) for url in youtube_urls]
+        if not openai_api_key:
+            return "Did you forget adding your OpenAI API key? If you don't have one, you can get it [here](https://platform.openai.com/account/api-keys)."
 
-    if pdf_urls:
-        [app.add("pdf_file", url["value"]) for url in pdf_urls]
+        if not query:
+            return "Did you forget writing your query in the query box?"
 
-    if text:
-        app.add_local("text", text)
+        if web_page_urls:
+            [app.add("web_page", url["value"]) for url in web_page_urls]
 
-    answer = app.chat(query, query_config)
+        if youtube_urls:
+            [app.add("youtube_video", url["value"]) for url in youtube_urls]
+
+        if pdf_urls:
+            [app.add("pdf_file", url["value"]) for url in pdf_urls]
+
+        if text:
+            app.add_local("text", text)
+
+        answer = app.query(query, query_config)
+
+    except Exception as e:
+        answer = "Oops, something went wrong! Please try again later or make a suggestion [here](https://github.com/dkedar7/embedchain-fastdash/issues)."
 
     return answer
 
 # Build app (this is all it takes!). Fast Dash understands what it needs to do. 
-app = FastDash(explore_your_knowledge_base)
+app = FastDash(explore_your_knowledge_base, github_url="https://github.com/dkedar7/embedchain-fastdash")
 server = app.server
 
 if __name__ == "__main__":
