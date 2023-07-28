@@ -4,7 +4,7 @@
 
 Extract information from custom sources—web pages, YouTube videos, PDF files, and any chunk of custom text.
 
-Input your sources and let GPT3.5 find answers. This app uses [Embedchain](embedchain.ai), which abstracts the entire process of loading and chunking datasets, creating embeddings, and storing them in a vector database. Embedchain itself uses Langchain and OpenAI's ChatGPT API.
+Input your sources and let GPT4 find answers. This app uses [Embedchain](embedchain.ai), which abstracts the entire process of loading and chunking datasets, creating embeddings, and storing them in a vector database. Embedchain itself uses Langchain and OpenAI's ChatGPT API.
 
 Don't forget to check out [Embedchain](embedchain.ai) team's amazing work!
 
