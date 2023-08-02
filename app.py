@@ -21,34 +21,24 @@ Answer:"""
 query_config = QueryConfig(template=PROMPT, number_documents=5, max_tokens=2000, model="gpt-4")
 
 # Define components
-openai_api_key_component = Fastify(
-    dmc.PasswordInput(
+openai_api_key_component = dmc.PasswordInput(
         placeholder="API Key",
         description="Get yours at https://platform.openai.com/account/api-keys",
         required=True
-    ),
-    "value",
-)
+    )
 
-web_page_urls_component = Fastify(
-    dmc.MultiSelect(
+web_page_urls_component = dmc.MultiSelect(
         description="Include all the reference web URLs",
         placeholder="Enter URLs separated by commas",
         searchable=True,
         creatable=True,
-    ),
-    "data",
-)
+    )
 
-text_component = Fastify(
-    dmc.Textarea(placeholder="Write your query here", autosize=True, minRows=4, description="Any additional information that could be useful"), "value"
-)
+text_component = dmc.Textarea(placeholder="Write your query here", autosize=True, minRows=4, description="Any additional information that could be useful")
 
-query_component = Fastify(
-    dmc.Textarea(placeholder="Write your query here", autosize=True, minRows=4, required=True, description="Write your query here"), "value",
-)
+query_component = dmc.Textarea(placeholder="Write your query here", autosize=True, minRows=4, required=True, description="Write your query here")
 
-answer_component = Fastify(dcc.Markdown(style={"text-align": "left", "padding": "1%"}, link_target="_blank"), "children")
+answer_component = dcc.Markdown(style={"text-align": "left", "padding": "1%"}, link_target="_blank")
 
 
 def explore_your_knowledge_base(
@@ -60,7 +50,7 @@ def explore_your_knowledge_base(
     query: text_component,
 ) -> answer_component:
     """
-    Input your sources and let GPT3.5 find answers. Built with Fast Dash.
+    Input your sources and let GPT4 find answers. Built with Fast Dash.
     This app uses embedchain.ai, which abstracts the entire process of loading and chunking datasets, creating embeddings, and storing them in a vector database.
     Embedchain itself uses Langchain and OpenAI's ChatGPT API.
     """
@@ -76,13 +66,13 @@ def explore_your_knowledge_base(
             return "Did you forget writing your query in the query box?"
 
         if web_page_urls:
-            [app.add("web_page", url["value"]) for url in web_page_urls]
+            [app.add("web_page", url) for url in web_page_urls]
 
         if youtube_urls:
-            [app.add("youtube_video", url["value"]) for url in youtube_urls]
+            [app.add("youtube_video", url) for url in youtube_urls]
 
         if pdf_urls:
-            [app.add("pdf_file", url["value"]) for url in pdf_urls]
+            [app.add("pdf_file", url) for url in pdf_urls]
 
         if text:
             app.add_local("text", text)
