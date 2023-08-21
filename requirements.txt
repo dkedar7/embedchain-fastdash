@@ -1,3 +1,4 @@
 fast-dash
 embedchain==0.0.30
 gunicorn
+python-dotenv==1.0.0

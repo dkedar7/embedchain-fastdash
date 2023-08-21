@@ -4,6 +4,10 @@ from fast_dash import FastDash, Fastify, dcc, dmc
 from embedchain import App
 from embedchain.config import QueryConfig
 from string import Template
+from dotenv import dotenv_values
+
+config = dotenv_values()
+os.environ["OPENAI_API_KEY"] =  config.get("OPENAI_API_KEY")
 
 # Define app configurations
 PROMPT = Template(
@@ -23,12 +27,6 @@ query_config = QueryConfig(
 )
 
 # Define components
-openai_api_key_component = dmc.PasswordInput(
-    placeholder="API Key",
-    description="Get yours at https://platform.openai.com/account/api-keys",
-    required=True,
-)
-
 web_page_urls_component = dmc.MultiSelect(
     description="Include all the reference web URLs",
     placeholder="Enter URLs separated by commas",
@@ -57,7 +55,6 @@ answer_component = dcc.Markdown(
 
 
 def explore_your_knowledge_base(
-    openai_api_key: openai_api_key_component,
     web_page_urls: web_page_urls_component,
     youtube_urls: web_page_urls_component,
     pdf_urls: web_page_urls_component,
@@ -71,13 +68,9 @@ def explore_your_knowledge_base(
     """
     answer_suffix = ""
 
-    if not openai_api_key:
-        return "Did you forget adding your OpenAI API key? If you don't have one, you can get it [here](https://platform.openai.com/account/api-keys)."
-
     if not query:
         return "Did you forget writing your query in the query box?"
 
-    os.environ["OPENAI_API_KEY"] = openai_api_key
     app = App()
 
     try:
