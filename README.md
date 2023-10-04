@@ -10,7 +10,7 @@ Don't forget to check out [Embedchain](embedchain.ai) team's amazing work!
 
 Fast Dash makes it easy to build any LLM-powered web app with just a few lines of code. Here's how an Embedchain app built with Fast Dash looks:
 
-![EmbedchainxFastDash](https://storage.googleapis.com/fast_dash/0.2.2/embedchainfastdash.png)
+![EmbedchainxFastDash](https://storage.googleapis.com/fast_dash/0.2.6/embedchainfastdash.png)
 Demo hosted [here](https://chatdocs.dkedar.com/)
 
 ## Try it yourself

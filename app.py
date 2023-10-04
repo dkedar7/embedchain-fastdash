@@ -1,26 +1,8 @@
 import os
-from fast_dash import FastDash, Fastify, dcc, dmc
+from fast_dash import FastDash, dcc, dmc, Chat
+from flask import session
 
-from embedchain import App
-from embedchain.config import QueryConfig
-from string import Template
-
-# Define app configurations
-PROMPT = Template(
-    """Use the given context to answer the question at the end.
-If you don't know the answer, say so, but don't try to make one up.
-At the end of the answer, also give the sources as a bulleted list.
-Display the answer as markdown text.
-
-Context: $context
-
-Query: $query
-
-Answer:"""
-)
-query_config = QueryConfig(
-    template=PROMPT, number_documents=5, max_tokens=2000, model="gpt-4"
-)
+from embedchain_utils import generate_response
 
 # Define components
 openai_api_key_component = dmc.PasswordInput(
@@ -63,7 +45,7 @@ def explore_your_knowledge_base(
     pdf_urls: web_page_urls_component,
     text: text_component,
     query: text_component,
-) -> answer_component:
+) -> Chat:
     """
     Input your sources and let GPT4 find answers. Built with Fast Dash.
     This app uses embedchain.ai, which abstracts the entire process of loading and chunking datasets, creating embeddings, and storing them in a vector database.
@@ -72,38 +54,32 @@ def explore_your_knowledge_base(
     answer_suffix = ""
 
     if not openai_api_key:
-        return "Did you forget adding your OpenAI API key? If you don't have one, you can get it [here](https://platform.openai.com/account/api-keys)."
+        answer = "Did you forget adding your OpenAI API key? If you don't have one, you can get it [here](https://platform.openai.com/account/api-keys)."
 
-    if not query:
-        return "Did you forget writing your query in the query box?"
+    elif not query:
+        answer = "Did you forget writing your query in the query box?"
+    
+    else:
+        os.environ["OPENAI_API_KEY"] = openai_api_key
+        
+        # Get chat history from Flask session
+        chat_history = session.get("chat_history", [])
 
-    os.environ["OPENAI_API_KEY"] = openai_api_key
-    app = App()
+        # Generate a response
+        answer = generate_response(web_page_urls, youtube_urls, pdf_urls, text, query, chat_history)
 
-    try:
-        if web_page_urls:
-            [app.add("web_page", url) for url in web_page_urls]
+        # Save chat history back to the session cache
+        chat_history.append([query, answer])
+        session["chat_history"] = chat_history
 
-        if youtube_urls:
-            [app.add("youtube_video", url) for url in youtube_urls]
+        answer = f"""{answer}
 
-        if pdf_urls:
-            [app.add("pdf_file", url) for url in pdf_urls]
+        {answer_suffix}
+        """
 
-        if text:
-            app.add_local("text", text)
+    chat = dict(query=query, response=answer)
 
-    except Exception as e:
-        print(str(e))
-        answer_suffix = "I couldn't analyze some sources. If you think this is an error, please try again later or make a suggestion [here](https://github.com/dkedar7/embedchain-fastdash/issues)."
-
-    answer = app.query(query, query_config)
-    answer = f"""{answer}
-
-    {answer_suffix}
-    """
-
-    return answer
+    return chat
 
 
 # Build app (this is all it takes!). Fast Dash understands what it needs to do.
@@ -112,6 +88,7 @@ app = FastDash(
     github_url="https://github.com/dkedar7/embedchain-fastdash",
 )
 server = app.server
+server.config["SECRET_KEY"] = "Some key"
 
 if __name__ == "__main__":
     app.run()
