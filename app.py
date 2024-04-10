@@ -1,16 +1,14 @@
 import os
 from fast_dash import FastDash, dcc, dmc, Chat
 from flask import session
+from dotenv import dotenv_values
 
 from embedchain_utils import generate_response
 
-# Define components
-openai_api_key_component = dmc.PasswordInput(
-    placeholder="API Key",
-    description="Get yours at https://platform.openai.com/account/api-keys",
-    required=True,
-)
+config = dotenv_values()
+os.environ["OPENAI_API_KEY"] =  config.get("OPENAI_API_KEY")
 
+# Define components
 web_page_urls_component = dmc.MultiSelect(
     description="Include all the reference web URLs",
     placeholder="Enter URLs separated by commas",
@@ -39,7 +37,6 @@ answer_component = dcc.Markdown(
 
 
 def explore_your_knowledge_base(
-    openai_api_key: openai_api_key_component,
     web_page_urls: web_page_urls_component,
     youtube_urls: web_page_urls_component,
     pdf_urls: web_page_urls_component,
@@ -53,14 +50,10 @@ def explore_your_knowledge_base(
     """
     answer_suffix = ""
 
-    if not openai_api_key:
-        answer = "Did you forget adding your OpenAI API key? If you don't have one, you can get it [here](https://platform.openai.com/account/api-keys)."
-
-    elif not query:
+    if not query:
         answer = "Did you forget writing your query in the query box?"
     
     else:
-        os.environ["OPENAI_API_KEY"] = openai_api_key
         
         # Get chat history from Flask session
         chat_history = session.get("chat_history", [])
