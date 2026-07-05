@@ -2,6 +2,8 @@
 
 **A conversational RAG agent — LangGraph + OpenRouter, built on [Fast Dash](https://github.com/dkedar7/fast_dash)'s native chat mode.**
 
+**▶ [Live demo](https://embedchain-fastdash.fly.dev/)**
+
 ![Chat with your knowledge base — adding a source, then a grounded, cited answer](docs/hero.png)
 
 Share a **web page, PDF, YouTube video, or pasted text** by chatting, then ask questions — the agent ingests your sources, retrieves the relevant passages, and answers with inline citations. You watch it work: the "adding source" and "searching" steps show up as cards in the transcript.
