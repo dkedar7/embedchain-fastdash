@@ -1,0 +1,31 @@
+# Fly.io config for the "Chat with your knowledge base" app.
+#
+# Set the LLM key once:  fly secrets set OPENROUTER_API_KEY=...
+# (Retrieval embeddings run locally — no other key needed.)
+#
+# A single always-on machine keeps chat history and the per-session vector
+# stores in one process.
+
+app = "embedchain-fastdash"
+primary_region = "sjc"
+
+[build]
+
+[env]
+  KNOWLEDGE_CHAT_MODEL = "anthropic/claude-haiku-4.5"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_start_machines = true
+  auto_stop_machines = "off"
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 150
+    hard_limit = 200
+
+[[vm]]
+  size = "shared-cpu-2x"
+  memory = "2gb"
