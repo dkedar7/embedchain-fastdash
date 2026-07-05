@@ -514,7 +514,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.12" },
-    { name = "fast-dash", extras = ["langstage"], specifier = ">=0.5.2" },
+    { name = "fast-dash", extras = ["langstage"], specifier = ">=0.5.3" },
     { name = "fastembed", specifier = ">=0.4" },
     { name = "gunicorn", marker = "sys_platform != 'win32' and extra == 'prod'", specifier = ">=22.0" },
     { name = "langchain-community", specifier = ">=0.3" },
@@ -533,7 +533,7 @@ dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "fast-dash"
-version = "0.5.2"
+version = "0.5.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dash" },
@@ -549,9 +549,9 @@ dependencies = [
     { name = "pillow" },
     { name = "pyreadline3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e6/3f/eb7d0eb660501a8ce7d0fdfcdd5de41754c1d4c5e1419a4857e5887aba8b/fast_dash-0.5.2.tar.gz", hash = "sha256:32f15338382a234c0316d0552761bd355eeff052c94ad24b3f8e2fd9d31f5d55", size = 136333, upload-time = "2026-07-05T02:35:56.919Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/19/b7/ad32606203b2e2a2d22b0be70e45e54d5ad65df57b150a0f61b811ff3458/fast_dash-0.5.3.tar.gz", hash = "sha256:4a37c30862a0907c41d68fc00da570214cd85250535bff32c04606b525b260cb", size = 136640, upload-time = "2026-07-05T14:00:47.65Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/35/04dedf6ef06026250b2f2f83bbc06bc9e5f75b5c696e9016f04ca993f31b/fast_dash-0.5.2-py3-none-any.whl", hash = "sha256:6c639e8f9b928008e0d417f7c9843a9ebf4bf4a8516dd042aafdb7ad70ecdc94", size = 135499, upload-time = "2026-07-05T02:35:55.784Z" },
+    { url = "https://files.pythonhosted.org/packages/46/e8/6af53f07088588117cb02cabc76b5683db32615e38f6eafaf060daf81274/fast_dash-0.5.3-py3-none-any.whl", hash = "sha256:4e657cf0b1ae216bdfecc05eb27b8566a743b760701d9e7236f54611264cb900", size = 135808, upload-time = "2026-07-05T14:00:46.493Z" },
 ]
 
 [package.optional-dependencies]
@@ -800,7 +800,7 @@ name = "gunicorn"
 version = "26.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "packaging" },
+    { name = "packaging", marker = "sys_platform != 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/6d/b7/a4a3f632f823e432ce6bc65f62961b7980c898c77f075a2f7118cb3846fe/gunicorn-26.0.0.tar.gz", hash = "sha256:ca9346f85e3a4aeeb64d491045c16b9a35647abd37ea15efe53080eb8b090baf", size = 727286, upload-time = "2026-05-05T06:38:25.529Z" }
 wheels = [

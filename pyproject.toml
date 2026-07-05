@@ -7,7 +7,7 @@ requires-python = ">=3.11,<3.14"
 license = { text = "MIT" }
 authors = [{ name = "Kedar Dabhadkar" }]
 dependencies = [
-    "fast-dash[langstage]>=0.5.2",
+    "fast-dash[langstage]>=0.5.3",
     "langgraph>=0.2.60",
     "langchain-openai>=0.2",
     "langchain-community>=0.3",

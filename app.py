@@ -26,6 +26,10 @@ app = FastDash(
     ),
     github_url="https://github.com/dkedar7/embedchain-fastdash",
     accent="indigo",
+    chat_placeholder=(
+        "Share a source — a web page, PDF, YouTube link, or text — then ask a "
+        "question about it."
+    ),
 )
 server = app.app.server  # WSGI entry point for gunicorn / deployment
 
